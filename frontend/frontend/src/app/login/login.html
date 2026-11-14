@@ -1,0 +1,93 @@
+<div class="login-page">
+
+  <div class="login-container">
+
+    <!-- Logo -->
+    <a routerLink="/" class="brand">
+      <span class="brand-icon">S</span>
+      <span>SC2 <strong>Connect</strong></span>
+    </a>
+
+    <!-- Login Card -->
+    <div class="login-card">
+
+      <div class="login-heading">
+        <span class="welcome">WELCOME BACK</span>
+        <h1>Login to your account</h1>
+        <p>Enter your credentials to access your SC2 space.</p>
+      </div>
+
+      <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+        <!-- Error -->
+        @if (errorMessage()) {
+          <div class="error-message">
+            {{ errorMessage() }}
+          </div>
+        }
+
+        <!-- Email -->
+        <div class="form-group">
+          <label for="email">Email Address</label>
+
+          <input
+            id="email"
+            type="email"
+            formControlName="email"
+            placeholder="your.email@example.com"
+            autocomplete="email"
+          />
+
+          @if (loginForm.controls.email.touched &&
+               loginForm.controls.email.invalid) {
+            <small>Please enter a valid email address.</small>
+          }
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+
+          <input
+            id="password"
+            type="password"
+            formControlName="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+          />
+
+          @if (loginForm.controls.password.touched &&
+               loginForm.controls.password.invalid) {
+            <small>Password is required.</small>
+          }
+        </div>
+
+        <!-- Button -->
+        <button
+          type="submit"
+          class="login-button"
+          [disabled]="loading()"
+        >
+          {{ loading() ? 'Logging in...' : 'Login to SC2' }}
+          <span>→</span>
+        </button>
+
+      </form>
+
+      <div class="divider">
+        <span>OR</span>
+      </div>
+
+      <p class="register-text">
+        Don't have an account?
+        <a routerLink="/register">Create an account</a>
+      </p>
+
+    </div>
+
+    <p class="footer-text">
+      © 2026 SC2 Connect. All rights reserved.
+    </p>
+
+  </div>
+</div>

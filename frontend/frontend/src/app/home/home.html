@@ -1,0 +1,159 @@
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content">
+    <span class="eyebrow">
+      <span class="status-dot"></span>
+      STUDENT CYBERSECURITY COMMUNITY
+    </span>
+
+    <h1>
+      Think Like a Hacker.<br>
+      <span>Build Like a Developer.</span>
+    </h1>
+
+    <p>
+      Discover cybersecurity, explore technical challenges
+      and develop your skills with a community that learns together.
+    </p>
+
+    <div class="hero-buttons">
+      <a routerLink="/register" class="btn btn-primary">
+        Join Our Community <span>→</span>
+      </a>
+
+      <a href="#domains" class="btn btn-outline">
+        Explore Domains
+      </a>
+    </div>
+
+    <div class="hero-note">
+      <span class="status-dot"></span>
+      Learn · Practice · Compete · Grow
+    </div>
+  </div>
+
+  <div class="hero-decoration">
+    <div class="terminal">
+      <div class="terminal-header">
+        <span></span><span></span><span></span>
+        <small>terminal</small>
+      </div>
+      <div class="terminal-body">
+        <p><span>$</span> welcome_to_sc2</p>
+        <p class="terminal-green">Initializing community...</p>
+        <p><span>✓</span> Web exploitation</p>
+        <p><span>✓</span> Cryptography</p>
+        <p><span>✓</span> Reverse engineering</p>
+        <p><span>✓</span> Binary exploitation</p>
+        <p class="terminal-green">Ready to learn_</p>
+      </div>
+    </div>
+    <div class="floating-code">&lt;/&gt;</div>
+    <div class="floating-lock">⌘</div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+  @for (stat of stats; track stat.label) {
+    <div class="stat-item">
+      <h2>{{ stat.value }}</h2>
+      <p>{{ stat.label }}</p>
+    </div>
+  }
+</section>
+
+<!-- DOMAINS -->
+<section class="section domains-section" id="domains">
+  <div class="section-heading">
+    <span class="section-label">WHAT WE EXPLORE</span>
+    <h2>Discover Our <span>Domains</span></h2>
+    <p>
+      Four exciting fields to explore, practice and master
+      through cybersecurity challenges.
+    </p>
+  </div>
+
+  <div class="domain-grid">
+    @for (activity of activities; track activity.number) {
+      <article class="domain-card" [attr.data-color]="activity.color">
+        <div class="domain-top">
+          <span class="domain-number">{{ activity.number }}</span>
+          <span class="domain-icon">{{ activity.icon }}</span>
+        </div>
+
+        <span class="domain-tag">{{ activity.tag }}</span>
+
+        <h3>{{ activity.title }}</h3>
+        <h4>{{ activity.subtitle }}</h4>
+
+        <p>{{ activity.description }}</p>
+
+        <div class="domain-footer">
+          <span>Explore the field</span>
+          <span class="arrow">↗</span>
+        </div>
+      </article>
+    }
+  </div>
+</section>
+
+<!-- JOIN STEPS -->
+<section class="join-section">
+  <div class="section-heading">
+    <span class="section-label">GET STARTED</span>
+    <h2>Your Journey <span>Starts Here</span></h2>
+    <p>Getting involved is simple. Follow these three steps.</p>
+  </div>
+
+  <div class="steps-grid">
+    @for (step of steps; track step.number) {
+      <article class="step-card">
+        <span class="step-number">{{ step.number }}</span>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </article>
+    }
+  </div>
+
+  <div class="join-button">
+    <a routerLink="/register" class="btn btn-primary">
+      Create Your Account →
+    </a>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="section news-section">
+  <div class="section-heading">
+    <span class="section-label">STAY CONNECTED</span>
+    <h2>What's Happening <span>at SC2?</span></h2>
+    <p>Discover what's waiting for you in our community.</p>
+  </div>
+
+  <div class="news-grid">
+    @for (item of news; track item.title) {
+      <article class="news-card">
+        <div class="news-icon">{{ item.icon }}</div>
+        <h3>{{ item.title }}</h3>
+        <p>{{ item.description }}</p>
+      </article>
+    }
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <span class="section-label">YOUR NEXT CHALLENGE AWAITS</span>
+  <h2>Ready to Explore the <span>Cyber World?</span></h2>
+  <p>
+    Join our community, develop your skills and discover
+    what you can achieve.
+  </p>
+  <a routerLink="/register" class="btn btn-primary">
+    Join SC2 Today →
+  </a>
+</section>
