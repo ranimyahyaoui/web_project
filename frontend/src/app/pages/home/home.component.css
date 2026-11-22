@@ -6,6 +6,17 @@
   padding-left: 1.25rem;
   padding-right: 1.25rem;
 }
+.home-featured-slot {
+  min-height: 360px;
+}
+.home-stats-slot {
+  min-height: 64px;
+}
+@media (min-width: 1101px) {
+  .home-featured-slot {
+    min-height: 430px;
+  }
+}
 @media (min-width: 641px) {
   .wrap {
     padding-left: 2rem;

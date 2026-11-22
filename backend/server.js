@@ -1,7 +1,8 @@
 import 'dotenv/config';
+import compression from 'compression';
 import cors from 'cors';
 import express from 'express';
-import { resolve } from 'node:path';
+import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { prisma } from './lib/prisma.js';
 import { loadUser } from './middlewares/auth.middleware.js';
@@ -14,6 +15,7 @@ import { seed } from './prisma/seed.js';
 
 export function createApp() {
   const app = express();
+  app.use(compression());
   app.use(cors());
   app.use(express.json({ limit: '100kb' }));
   app.use(loadUser);
@@ -27,6 +29,32 @@ export function createApp() {
   app.use('/api', (_req, res) =>
     res.status(404).json({ error: 'Route inconnue.' }),
   );
+
+  const frontendDirectory = join(
+    resolve(fileURLToPath(new URL('.', import.meta.url)), '..'),
+    'frontend',
+    'dist',
+    'frontend',
+    'browser',
+  );
+  app.use(
+    express.static(frontendDirectory, {
+      index: false,
+      setHeaders: (res, filePath) => {
+        if (/index\.html$/.test(filePath)) {
+          res.set('Cache-Control', 'no-cache');
+        } else if (/\.(?:js|css|woff2?|svg)$/.test(filePath)) {
+          res.set('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+      },
+    }),
+  );
+  const sendIndex = (_req, res) => {
+    res.set('Cache-Control', 'no-cache');
+    res.sendFile(join(frontendDirectory, 'index.html'));
+  };
+  app.get('/', sendIndex);
+  app.get('*', sendIndex);
   app.use((error, _req, res, _next) => {
     if (error.type === 'entity.parse.failed') {
       return res.status(400).json({ error: 'Requête mal formée.' });

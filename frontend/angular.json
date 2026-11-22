@@ -51,8 +51,6 @@
               }
             ],
             "styles": [
-              "node_modules/@fontsource-variable/bricolage-grotesque/index.css",
-              "node_modules/@fontsource-variable/onest/index.css",
               "src/styles.css"
             ]
           },

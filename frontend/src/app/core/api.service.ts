@@ -28,6 +28,10 @@ export class ApiService {
   private readonly base = '/api';
 
   // Public
+  home(): Observable<{ activities: Activity[]; stats: Stats; news: News[] }> {
+    return this.http.get<{ activities: Activity[]; stats: Stats; news: News[] }>(`${this.base}/home`);
+  }
+
   stats(): Observable<Stats> {
     return this.http.get<Stats>(`${this.base}/stats`);
   }

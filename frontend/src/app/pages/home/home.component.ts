@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
-import { forkJoin } from 'rxjs';
 import { ApiService } from '../../core/api.service';
 import { shortDate } from '../../core/format';
 import { createLoader } from '../../core/loader';
@@ -25,10 +24,8 @@ export class HomeComponent {
   private readonly api = inject(ApiService);
   protected readonly shortDate = shortDate;
 
-  // Trois requêtes lancées en parallèle, un seul état de chargement.
-  protected readonly page = createLoader(() =>
-    forkJoin({ activities: this.api.activities(), stats: this.api.stats(), news: this.api.news() }),
-  );
+  // Une seule requête agrégée pour le premier affichage.
+  protected readonly page = createLoader(() => this.api.home());
 
   protected readonly upcoming = computed(() =>
     (this.page.data()?.activities ?? []).filter((a) => a.status !== 'started'),

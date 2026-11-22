@@ -45,19 +45,20 @@
           >Rejoindre le club</a
         >
       </div>
-      @if (stats().length) {
-        <dl class="mt-10 flex gap-8 text-sm text-hero-muted">
+      <dl class="home-stats-slot mt-10 flex gap-8 text-sm text-hero-muted" aria-live="polite">
+        @if (stats().length) {
           @for (stat of stats(); track stat.label) {
             <div class="flex flex-col-reverse">
               <dt>{{ stat.label }}</dt>
               <dd class="font-display text-2xl font-bold text-hero-ink">{{ stat.value }}</dd>
             </div>
           }
-        </dl>
-      }
+        }
+      </dl>
     </div>
 
-    @if (featured(); as activity) {
+    <div class="home-featured-slot">
+      @if (featured(); as activity) {
       <div class="relative mx-auto w-full max-w-[430px] lg:-rotate-2">
         <div
           class="absolute inset-0 hidden -translate-y-8 translate-x-8 rotate-6 rounded-l border border-white/10 bg-white/5 lg:block"
@@ -74,7 +75,8 @@
           class="relative rounded-l shadow-lift"
         />
       </div>
-    }
+      }
+    </div>
   </div>
 </section>
 

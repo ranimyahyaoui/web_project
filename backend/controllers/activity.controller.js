@@ -19,6 +19,24 @@ export const stats = async (_req, res, next) => {
   }
 };
 
+export const home = async (_req, res, next) => {
+  try {
+    const [members, activitiesCount, activities, news] = await Promise.all([
+      prisma.user.count({ where: { membershipStatus: 'ACTIVE' } }),
+      prisma.activity.count(),
+      listActivities(),
+      prisma.news.findMany({ orderBy: { date: 'desc' } }),
+    ]);
+    return res.json({
+      activities: activities.filter((activity) => activity.status !== 'past'),
+      stats: { members, activities: activitiesCount, poles: 4 },
+      news,
+    });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 export const list = async (req, res, next) => {
   try {
     const { type, pole, q, available } = req.query;
