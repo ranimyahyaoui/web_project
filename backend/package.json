@@ -1,24 +1,28 @@
 {
-  "name": "backend",
+  "name": "sc2-connect-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "private": true,
+  "description": "API REST de SC2 Connect (Express + Prisma)",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "seed": "node prisma/seed.js",
+    "test": "node scripts/test.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
+  "postinstall": "prisma generate",
   "dependencies": {
-    "@prisma/client": "^6.19.3",
-    "bcryptjs": "^3.0.3",
-    "cors": "^2.8.6",
-    "dotenv": "^18.0.10",
-    "express": "^5.3.0",
-    "jsonwebtoken": "^9.0.3"
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "jsonwebtoken": "^9.0.2",
+    "@prisma/client": "^6.19.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
-    "prisma": "^6.19.3"
+    "prisma": "^6.19.0"
   }
 }

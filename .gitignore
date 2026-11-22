@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.angular/
+out-tsc/
+.env
+backend/prisma/*.db
+backend/prisma/*.db-journal
+backend/prisma/*.db-shm
+backend/prisma/*.db-wal
+frontend/node_modules/
+backend/node_modules/
+*.log
+.DS_Store

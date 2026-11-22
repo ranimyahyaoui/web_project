@@ -1,0 +1,44 @@
+<article class="ticket h-full">
+  <div class="flex-1 px-[22px] pb-[18px] pt-5">
+    <div class="flex items-center justify-between gap-2">
+      <app-type-badge [type]="activity().type" />
+      <span class="truncate text-[13px] font-medium text-muted">{{ activity().pole }}</span>
+    </div>
+
+    @if (headingLevel() === 2) {
+      <h2 class="my-3.5 text-[21px] font-bold leading-[1.18]">
+        <a [routerLink]="link()" class="hover:underline">{{ activity().title }}</a>
+      </h2>
+    } @else {
+      <h3 class="my-3.5 text-[21px] font-bold leading-[1.18]">
+        <a [routerLink]="link()" class="hover:underline">{{ activity().title }}</a>
+      </h3>
+    }
+
+    <ul class="grid gap-[7px] text-sm text-muted">
+      <li class="flex items-center gap-2">
+        <app-icon name="calendar" [size]="16" class="text-faint" />{{ dateLabel() }}
+      </li>
+      <li class="flex items-center gap-2">
+        <app-icon name="clock" [size]="16" class="text-faint" />{{ activity().startTime }} –
+        {{ activity().endTime }}
+      </li>
+      <li class="flex items-center gap-2">
+        <app-icon name="map-pin" [size]="16" class="text-faint" />{{ activity().location }}
+      </li>
+    </ul>
+  </div>
+
+  <div class="ticket-perf" aria-hidden="true"></div>
+
+  <div class="flex items-end justify-between gap-3 px-[22px] pb-[18px] pt-4">
+    <app-seat-gauge [taken]="activity().taken" [capacity]="activity().capacity" />
+    <a
+      [routerLink]="link()"
+      class="btn btn-sm"
+      [class]="action().className"
+      [attr.aria-label]="action().label + ' : ' + activity().title"
+      >{{ action().label }}</a
+    >
+  </div>
+</article>

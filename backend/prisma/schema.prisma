@@ -8,9 +8,96 @@ datasource db {
 }
 
 model User {
+  id               Int            @id @default(autoincrement())
+  firstName        String
+  lastName         String
+  email            String         @unique
+  passwordHash     String
+  role             String         @default("MEMBER")
+  membershipStatus String         @default("PENDING")
+  level            String
+  poles            String         @default("")
+  motivation       String         @default("")
+  memberNumber     String?        @unique
+  createdAt        DateTime       @default(now())
+  payments         Payment[]
+  registrations    Registration[]
+
+  @@index([membershipStatus])
+}
+
+model Payment {
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  academicYear String
+  amount       Float
+  status       String   @default("PENDING")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, academicYear])
+}
+
+model Activity {
+  id          Int            @id @default(autoincrement())
+  slug        String         @unique
+  type        String
+  title       String
+  summary     String
+  description String
+  date        String
+  startTime   String
+  endTime     String
+  location    String
+  capacity    Int
+  pole        String
+  level       String         @default("Tous niveaux")
+  duration    String         @default("")
+  bring       String         @default("")
+  outcomes    String         @default("[]")
+  sessions    String         @default("[]")
+  registrations Registration[]
+
+  @@index([date])
+}
+
+model Registration {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  activityId Int
+  code       String   @unique
+  status     String   @default("CONFIRMED")
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activity   Activity @relation(fields: [activityId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, activityId])
+  @@index([activityId, status])
+}
+
+model BoardMember {
+  id          Int    @id @default(autoincrement())
+  name        String
+  position    String
+  description String
+  email       String
+  sortOrder   Int    @default(0)
+}
+
+model News {
+  id      Int    @id @default(autoincrement())
+  title   String
+  excerpt String
+  tag     String
+  date    String
+
+  @@index([date])
+}
+
+model ContactMessage {
   id        Int      @id @default(autoincrement())
   name      String
-  email     String   @unique
-  password  String
+  email     String
+  subject   String
+  message   String
   createdAt DateTime @default(now())
 }

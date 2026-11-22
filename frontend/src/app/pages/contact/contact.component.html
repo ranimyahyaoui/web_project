@@ -1,0 +1,85 @@
+<div class="wrap pt-8">
+  <app-breadcrumb [items]="[{ label: 'Contact' }]" />
+  <div class="grid gap-10 lg:grid-cols-[.8fr_1.2fr]">
+    <div>
+      <h1 class="text-[39px] font-extrabold md:text-[49px]">Contacter le bureau</h1>
+      <p class="mt-3 max-w-[46ch] text-muted">
+        Une question, une idée d’atelier, un partenariat ? Le bureau répond par e-mail sous quelques
+        jours.
+      </p>
+      <ul class="mt-6 grid gap-3 text-[15px]">
+        <li class="flex items-center gap-3">
+          <app-icon name="mail" [size]="20" class="text-green-ink" /><a
+            [href]="'mailto:' + email"
+            class="font-medium hover:underline"
+            >{{ email }}</a
+          >
+        </li>
+        <li class="flex items-center gap-3">
+          <app-icon name="map-pin" [size]="20" class="text-green-ink" />Local du club, SUP’COM
+        </li>
+      </ul>
+    </div>
+
+    <form
+      [formGroup]="form"
+      (ngSubmit)="submit()"
+      novalidate
+      class="card grid gap-5 p-6 md:grid-cols-2 md:p-8"
+    >
+      <div>
+        <label for="contact-name" class="field-label">Nom</label>
+        <input
+          id="contact-name"
+          class="field-input"
+          formControlName="name"
+          autocomplete="name"
+          [attr.aria-invalid]="errors.of('name') ? 'true' : null"
+          aria-describedby="contact-name-error"
+        />
+        <app-field-error id="contact-name-error" [message]="errors.of('name')" />
+      </div>
+      <div>
+        <label for="contact-email" class="field-label">Adresse e-mail</label>
+        <input
+          id="contact-email"
+          type="email"
+          class="field-input"
+          formControlName="email"
+          autocomplete="email"
+          [attr.aria-invalid]="errors.of('email') ? 'true' : null"
+          aria-describedby="contact-email-error"
+        />
+        <app-field-error id="contact-email-error" [message]="errors.of('email')" />
+      </div>
+      <div class="md:col-span-2">
+        <label for="contact-subject" class="field-label">Sujet</label>
+        <input
+          id="contact-subject"
+          class="field-input"
+          formControlName="subject"
+          [attr.aria-invalid]="errors.of('subject') ? 'true' : null"
+          aria-describedby="contact-subject-error"
+        />
+        <app-field-error id="contact-subject-error" [message]="errors.of('subject')" />
+      </div>
+      <div class="md:col-span-2">
+        <label for="contact-message" class="field-label">Message</label>
+        <textarea
+          id="contact-message"
+          rows="6"
+          class="field-input"
+          formControlName="message"
+          [attr.aria-invalid]="errors.of('message') ? 'true' : null"
+          aria-describedby="contact-message-error"
+        ></textarea>
+        <app-field-error id="contact-message-error" [message]="errors.of('message')" />
+      </div>
+      <div class="md:col-span-2">
+        <button type="submit" class="btn btn-primary" [disabled]="sending()">
+          <app-icon name="send" />{{ sending() ? 'Envoi…' : 'Envoyer le message' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

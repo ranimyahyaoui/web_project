@@ -1,0 +1,192 @@
+<app-shell [links]="links" roleLabel="Administrateur">
+  @if (overview.error(); as error) {
+    <app-error-state [error]="error" (retry)="overview.load()" />
+  } @else if (overview.data(); as data) {
+    <div class="mx-auto grid max-w-[1200px] grid-cols-1 gap-8">
+      <header>
+        <h1 class="text-[31px] font-extrabold md:text-[39px]">Tableau de bord</h1>
+        <p class="mt-1 text-muted">
+          Année 2026-2027. Tout ce qui demande une action est visible ici.
+        </p>
+      </header>
+
+      <ul id="indicateurs" class="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        @for (card of cards(); track card.label) {
+          <li class="card p-5">
+            <p class="flex items-center justify-between text-sm text-muted">
+              {{ card.label }}<app-icon [name]="card.icon" class="text-faint" />
+            </p>
+            <p class="mt-2 font-display text-[31px] font-bold leading-none">{{ card.value }}</p>
+            <p class="mt-2 text-[13px] text-muted">{{ card.detail }}</p>
+          </li>
+        }
+      </ul>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(0,1fr)_340px] lg:items-start">
+        <section id="etudiants" class="card min-w-0 p-5">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-2xl font-bold">Étudiants et paiements</h2>
+            <div
+              class="flex flex-wrap gap-1.5"
+              role="group"
+              aria-label="Filtrer par statut de cotisation"
+            >
+              @for (option of paymentFilters; track option.value) {
+                <button
+                  type="button"
+                  class="chip"
+                  [attr.aria-pressed]="paymentFilter() === option.value"
+                  (click)="paymentFilter.set(option.value)"
+                >
+                  {{ option.label }}
+                </button>
+              }
+            </div>
+          </div>
+          <label
+            class="mt-4 flex h-10 items-center gap-2 rounded-m border border-line px-3 text-faint"
+          >
+            <app-icon name="search" [size]="16" />
+            <span class="sr-only">Rechercher un étudiant</span>
+            <input
+              #searchField
+              type="search"
+              [value]="search()"
+              (input)="search.set(searchField.value)"
+              placeholder="Rechercher un étudiant…"
+              class="w-full border-0 bg-transparent text-sm text-ink outline-none placeholder:text-faint"
+            />
+          </label>
+          <p class="mt-3 text-sm text-muted" aria-live="polite">{{ studentCount() }}</p>
+
+          <div class="mt-2 max-h-[520px] overflow-auto">
+            <table class="w-full min-w-[560px] text-left text-[15px]">
+              <thead class="sticky top-0 bg-surface text-[13px] text-muted">
+                <tr>
+                  <th scope="col" class="py-2 pr-3 font-medium">Étudiant</th>
+                  <th scope="col" class="py-2 pr-3 font-medium">Niveau et filière</th>
+                  <th scope="col" class="py-2 pr-3 font-medium">Paiement</th>
+                  <th scope="col" class="py-2 font-medium">Modifier</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-line">
+                @for (student of students(); track student.id) {
+                  <tr>
+                    <th scope="row" class="py-2.5 pr-3 font-normal">
+                      <span class="flex items-center gap-2.5">
+                        <span
+                          class="grid h-8 w-8 flex-none place-items-center rounded-full bg-night text-[11px] font-bold text-[#F5F7F2]"
+                          aria-hidden="true"
+                          >{{ initials(student.firstName, student.lastName) }}</span
+                        >
+                        <span class="min-w-0">
+                          <span class="block font-semibold"
+                            >{{ student.firstName }} {{ student.lastName }}</span
+                          >
+                          <span class="block truncate text-[13px] text-muted">{{
+                            student.email
+                          }}</span>
+                        </span>
+                      </span>
+                    </th>
+                    <td class="py-2.5 pr-3 text-muted">{{ student.level }}</td>
+                    <td class="py-2.5 pr-3">
+                      <app-payment-badge [status]="student.paymentStatus" />
+                    </td>
+                    <td class="py-2.5">
+                      <select
+                        #paymentSelect
+                        class="h-9 rounded-[10px] border border-line-2 bg-surface px-2 text-sm"
+                        (change)="setPayment(student, paymentSelect.value)"
+                        [attr.aria-label]="
+                          'Statut de cotisation de ' + student.firstName + ' ' + student.lastName
+                        "
+                      >
+                        @for (option of paymentOptions; track option.value) {
+                          <option
+                            [value]="option.value"
+                            [selected]="student.paymentStatus === option.value"
+                          >
+                            {{ option.label }}
+                          </option>
+                        }
+                      </select>
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+            @if (students().length === 0) {
+              <p class="py-8 text-center text-muted">Aucun étudiant ne correspond.</p>
+            }
+          </div>
+        </section>
+
+        <section id="adhesions" class="card p-5">
+          <div class="flex items-center justify-between gap-2">
+            <h2 class="text-2xl font-bold">Demandes d’adhésion</h2>
+            <span class="badge b-wait">{{ data.requests.length }} en attente</span>
+          </div>
+          <ul class="mt-4 grid gap-3">
+            @for (request of data.requests; track request.id) {
+              <li class="rounded-m border border-line p-3.5">
+                <p class="font-semibold">{{ request.firstName }} {{ request.lastName }}</p>
+                <p class="text-[13px] text-muted">{{ request.level }} · {{ age(request) }}</p>
+                <p class="mt-1 text-[13px] text-muted">Pôles : {{ request.poles }}</p>
+                <div class="mt-3 flex gap-2">
+                  <button
+                    type="button"
+                    class="btn btn-primary btn-sm"
+                    (click)="decide(request, 'ACTIVE')"
+                    [attr.aria-label]="
+                      'Valider l’adhésion de ' + request.firstName + ' ' + request.lastName
+                    "
+                  >
+                    <app-icon name="check" />Valider
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-sm"
+                    (click)="decide(request, 'REFUSED')"
+                    [attr.aria-label]="
+                      'Refuser la demande de ' + request.firstName + ' ' + request.lastName
+                    "
+                  >
+                    <app-icon name="x" />Refuser
+                  </button>
+                </div>
+              </li>
+            } @empty {
+              <li class="text-muted">Toutes les demandes sont traitées.</li>
+            }
+          </ul>
+        </section>
+      </div>
+
+      <section id="reservations" class="card p-5">
+        <h2 class="text-2xl font-bold">Réservations des prochaines activités</h2>
+        <ul class="mt-4 grid gap-x-10 gap-y-3 md:grid-cols-2">
+          @for (activity of data.activities; track activity.id) {
+            <li
+              class="grid grid-cols-[minmax(0,1fr)_minmax(0,1.2fr)_auto] items-center gap-3 text-sm"
+            >
+              <span class="truncate font-semibold">{{ shortTitle(activity.title) }}</span>
+              <span class="h-2.5 overflow-hidden rounded-full bg-surface-2" aria-hidden="true">
+                <span
+                  class="block h-full rounded-full"
+                  [class]="bar[activity.type]"
+                  [style.width.%]="(activity.taken / activity.capacity) * 100"
+                ></span>
+              </span>
+              <span class="tabular-nums text-muted"
+                >{{ activity.taken }} / {{ activity.capacity }}</span
+              >
+            </li>
+          }
+        </ul>
+      </section>
+    </div>
+  } @else {
+    <app-loading label="Chargement du tableau de bord…" />
+  }
+</app-shell>

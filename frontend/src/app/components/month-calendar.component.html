@@ -1,0 +1,59 @@
+<section class="card overflow-hidden" [attr.aria-label]="'Calendrier, ' + title()">
+  <header class="flex items-center justify-between gap-3 px-5 py-4">
+    <h2 class="text-2xl font-bold" aria-live="polite">{{ title() }}</h2>
+    <div class="flex gap-2">
+      <button
+        type="button"
+        class="btn btn-ghost btn-sm w-9 px-0"
+        (click)="shift(-1)"
+        aria-label="Mois précédent"
+      >
+        <app-icon name="chevron-left" />
+      </button>
+      <button
+        type="button"
+        class="btn btn-ghost btn-sm w-9 px-0"
+        (click)="shift(1)"
+        aria-label="Mois suivant"
+      >
+        <app-icon name="chevron-right" />
+      </button>
+    </div>
+  </header>
+
+  <div class="grid grid-cols-7 border-t border-line text-center text-xs font-medium text-faint">
+    @for (weekday of weekdays; track weekday) {
+      <div class="py-2">{{ weekday }}</div>
+    }
+  </div>
+
+  <div class="grid grid-cols-7">
+    @for (day of days(); track day.iso) {
+      <button
+        type="button"
+        (click)="daySelect.emit(day.iso)"
+        [attr.aria-pressed]="day.iso === selected()"
+        [attr.aria-label]="day.label"
+        class="flex min-h-[64px] flex-col items-stretch gap-1 border-l border-t border-line p-1.5 text-left md:min-h-[92px] [&:nth-child(7n+1)]:border-l-0"
+        [class.bg-green-tint]="day.iso === selected()"
+        [class.hover:bg-surface-2]="day.iso !== selected()"
+        [class.text-faint]="day.outside"
+      >
+        <span
+          class="grid h-6 w-6 place-items-center rounded-full text-[13px] font-medium"
+          [class]="day.today ? 'bg-night text-[#F5F7F2]' : ''"
+          >{{ day.number }}</span
+        >
+        @for (event of day.events; track event.slug) {
+          <span
+            class="truncate rounded-[4px] border-l-2 px-1 py-0.5 text-[11px] font-semibold leading-tight"
+            [class]="eventClass[event.type]"
+          >
+            <span class="hidden md:inline">{{ event.title }}</span>
+            <span class="md:hidden" aria-hidden="true">●</span>
+          </span>
+        }
+      </button>
+    }
+  </div>
+</section>

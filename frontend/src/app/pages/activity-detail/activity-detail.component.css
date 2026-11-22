@@ -1,0 +1,378 @@
+.wrap {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  max-width: 1280px;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+@media (min-width: 641px) {
+  .wrap {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+.btn {
+  display: inline-flex;
+  height: 2.75rem;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  border-radius: 12px;
+  border-width: 1.5px;
+  border-color: transparent;
+  padding-left: 18px;
+  padding-right: 18px;
+  font-size: 15px;
+  font-weight: 600;
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 0.15s;
+}
+.btn-primary {
+  background: var(--green);
+  color: #0c1a36;
+}
+.btn-primary:hover {
+  background: #18a571;
+}
+.btn-danger {
+  border-color: var(--line-2);
+  background-color: transparent;
+  color: var(--red);
+}
+.btn-danger:hover {
+  border-color: var(--red);
+}
+.btn-sm {
+  height: 2.25rem;
+  border-radius: 10px;
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.btn-block {
+  width: 100%;
+}
+.btn:disabled {
+  cursor: not-allowed;
+  border-color: transparent;
+  background-color: var(--surface-2);
+  color: var(--faint);
+}
+.badge {
+  display: inline-flex;
+  height: 26px;
+  align-items: center;
+  gap: 0.375rem;
+  white-space: nowrap;
+  border-radius: 9999px;
+  padding-left: 0.625rem;
+  padding-right: 0.625rem;
+  font-size: 13px;
+  font-weight: 600;
+}
+.b-formation {
+  background-color: var(--blue-tint);
+  color: var(--blue);
+}
+.b-neutral {
+  background-color: var(--surface-2);
+  color: var(--muted);
+}
+.ticket {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  border-width: 1px;
+  border-color: var(--line);
+  background-color: var(--surface);
+  color: var(--ink);
+  --tw-shadow: var(--shadow);
+  --tw-shadow-colored: var(--shadow);
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.ticket-perf {
+  position: relative;
+  height: 0;
+  margin: 0 20px;
+  border-top: 2px dashed var(--line-2);
+}
+.ticket-perf:after,
+.ticket-perf:before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--notch);
+  border: 1px solid var(--line);
+}
+.ticket-perf:before {
+  left: -33px;
+  clip-path: inset(0 0 0 50%);
+}
+.ticket-perf:after {
+  right: -33px;
+  clip-path: inset(0 50% 0 0);
+}
+.gradient-a {
+  background: linear-gradient(120deg, #0b7a50, #1db980 22%, #2f5fe0 78%, #1b3266);
+}
+.gradient-b {
+  background: linear-gradient(135deg, #2f5fe0, #1b3266);
+}
+.gradient-c {
+  background: linear-gradient(135deg, #6a4be8, #132650);
+}
+.fixed {
+  position: fixed;
+}
+.sticky {
+  position: sticky;
+}
+.inset-x-0 {
+  left: 0;
+  right: 0;
+}
+.bottom-0 {
+  bottom: 0;
+}
+.z-10 {
+  z-index: 10;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mt-0\.5 {
+  margin-top: 0.125rem;
+}
+.mt-3 {
+  margin-top: 0.75rem;
+}
+.mt-4 {
+  margin-top: 1rem;
+}
+.mt-5 {
+  margin-top: 1.25rem;
+}
+.mt-7 {
+  margin-top: 1.75rem;
+}
+.mt-9 {
+  margin-top: 2.25rem;
+}
+.flex {
+  display: flex;
+}
+.grid {
+  display: grid;
+}
+.hidden {
+  display: none;
+}
+.h-44 {
+  height: 11rem;
+}
+.grid-cols-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+.flex-wrap {
+  flex-wrap: wrap;
+}
+.place-items-center {
+  place-items: center;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.items-baseline {
+  align-items: baseline;
+}
+.justify-between {
+  justify-content: space-between;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-2\.5 {
+  gap: 0.625rem;
+}
+.gap-3 {
+  gap: 0.75rem;
+}
+.gap-3\.5 {
+  gap: 0.875rem;
+}
+.gap-8 {
+  gap: 2rem;
+}
+.rounded-l {
+  border-radius: 20px;
+}
+.rounded-m {
+  border-radius: 12px;
+}
+.rounded-l {
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+}
+.border {
+  border-width: 1px;
+}
+.border-t {
+  border-top-width: 1px;
+}
+.border-line {
+  border-color: var(--line);
+}
+.bg-green-tint {
+  background-color: var(--green-tint);
+}
+.bg-surface {
+  background-color: var(--surface);
+}
+.p-4 {
+  padding: 1rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.px-5 {
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+.px-6 {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+.py-2\.5 {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.pb-24 {
+  padding-bottom: 6rem;
+}
+.pb-5 {
+  padding-bottom: 1.25rem;
+}
+.pb-6 {
+  padding-bottom: 1.5rem;
+}
+.pt-5 {
+  padding-top: 1.25rem;
+}
+.pt-6 {
+  padding-top: 1.5rem;
+}
+.pt-8 {
+  padding-top: 2rem;
+}
+.text-center {
+  text-align: center;
+}
+.font-display {
+  font-family:
+    Bricolage Grotesque Variable,
+    Onest Variable,
+    system-ui,
+    sans-serif;
+}
+.text-2xl {
+  font-size: 1.5rem;
+  line-height: 2rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-xl {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.text-xs {
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+.font-bold {
+  font-weight: 700;
+}
+.font-extrabold {
+  font-weight: 800;
+}
+.font-medium {
+  font-weight: 500;
+}
+.font-semibold {
+  font-weight: 600;
+}
+.tracking-wide {
+  letter-spacing: 0.025em;
+}
+.text-faint {
+  color: var(--faint);
+}
+.text-green-ink {
+  color: var(--green-ink);
+}
+.text-ink {
+  color: var(--ink);
+}
+.text-muted {
+  color: var(--muted);
+}
+.text-white {
+  --tw-text-opacity: 1;
+  color: rgb(255 255 255 / var(--tw-text-opacity, 1));
+}
+.text-white\/90 {
+  color: hsla(0, 0%, 100%, 0.9);
+}
+.hover\:underline:hover {
+  text-decoration-line: underline;
+}
+@media (min-width: 641px) {
+  .md\:h-64 {
+    height: 16rem;
+  }
+  .md\:grid-cols-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1101px) {
+  .lg\:sticky {
+    position: sticky;
+  }
+  .lg\:hidden {
+    display: none;
+  }
+  .lg\:items-start {
+    align-items: flex-start;
+  }
+  .lg\:pb-0 {
+    padding-bottom: 0;
+  }
+}

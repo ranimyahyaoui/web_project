@@ -1,0 +1,58 @@
+.flex {
+  display: flex;
+}
+.w-full {
+  width: 100%;
+}
+.items-center {
+  align-items: center;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.rounded-m {
+  border-radius: 12px;
+}
+.border {
+  border-width: 1px;
+}
+.border-0 {
+  border-width: 0;
+}
+.border-line {
+  border-color: var(--line);
+}
+.bg-surface {
+  background-color: var(--surface);
+}
+.bg-transparent {
+  background-color: transparent;
+}
+.px-3 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+}
+.px-3\.5 {
+  padding-left: 0.875rem;
+  padding-right: 0.875rem;
+}
+.text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+.text-faint {
+  color: var(--faint);
+}
+.text-ink {
+  color: var(--ink);
+}
+.outline-none {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+.placeholder\:text-faint::-moz-placeholder {
+  color: var(--faint);
+}
+.placeholder\:text-faint::placeholder {
+  color: var(--faint);
+}

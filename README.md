@@ -1,203 +1,121 @@
-# SC2 – Cybersecurity Community Platform
+# SC2 Connect
 
-## 1. Project Overview
+Plateforme du club SC2 (SUP'COM) : activités, réservations, adhésions, espace membre et administration.
 
-SC2 is a web platform designed to bring together cybersecurity enthusiasts and students. Its purpose is to provide an interactive space where users can discover cybersecurity fields, explore technical topics, and join a cybersecurity community.
+## Démarrage
 
-The platform focuses on six main cybersecurity domains:
+Prérequis : Node.js 22.12+ et npm.
 
-- Web Exploitation
-- Cryptography
-- OSINT
-- Digital Forensics
-- Pwn
-- Reverse Engineering
-
-## 2. Technologies Used
-
-### Frontend
-- **Angular:** Chosen to build a dynamic, component-based web application.
-- **TypeScript:** Used to implement application logic.
-- **HTML5:** Used to structure web pages.
-- **CSS3:** Used to design and style the interface.
-
-### Backend
-- **Node.js:** JavaScript runtime environment.
-- **Express.js:** Used to develop the REST API.
-- **Prisma ORM:** Used to communicate with the database.
-- **SQLite:** Used to store user information.
-- **JWT:** Used for authentication.
-- **bcryptjs:** Used to hash passwords.
-
-## 3. Main Features
-
-### Home Page
-- Introduction to the SC2 platform.
-- Presentation of the six cybersecurity domains.
-- Navigation to the different sections.
-
-### User Authentication
-- User registration with name, email, and password.
-- User login with email and password.
-- Password hashing using bcryptjs.
-- JWT-based authentication.
-
-### User Profile
-- User Profile interface created.
-- The profile component is currently under development.
-- Backend integration and profile functionality are not implemented yet.
-
-### Dynamic Navigation
-The navigation bar adapts to the authentication status:
-
-- **Guest users:** Login and Register.
-- **Authenticated users:** Profile and Logout.
-
-### Not Found Page
-- Custom 404 page for unknown routes.
-
-## 4. Project Structure
-
-```text
-SC2/
-│
-├── frontend/
-│   └── src/
-│       └── app/
-│           ├── home/
-│           ├── login/
-│           ├── register/
-│           ├── profile/
-│           ├── navbar/
-│           ├── notfound/
-│           ├── core/
-│           ├── app.routes.ts
-│           └── app.config.ts
-│
-└── backend/
-    ├── controllers/
-    │   └── authController.js
-    ├── routes/
-    │   └── authRoutes.js
-    ├── middlewares/
-    │   └── authMiddleware.js
-    ├── lib/
-    │   └── prisma.js
-    ├── prisma/
-    │   └── schema.prisma
-    ├── .env
-    ├── server.js
-    └── package.json
-```
-
-## 5. Backend API
-
-The backend provides the following REST API endpoints:
-
-| HTTP Method | Endpoint | Description |
-|---|---|---|
-| POST | `/api/auth/register` | Register a new user |
-| POST | `/api/auth/login` | Authenticate a user |
-| GET | `/api/auth/me` | Retrieve authenticated user information |
-
-## 6. Installation and Execution
-
-### Prerequisites
-
-Make sure the following tools are installed:
-
-- Node.js
-- npm
-- Angular CLI
-- Git
-- Visual Studio Code
-
-### Step 1 – Clone the Project
-
-```bash
-git clone YOUR_REPOSITORY_URL
-cd SC2
-```
-
-### Step 2 – Start the Backend
+Dans le premier terminal, depuis la racine du projet :
 
 ```bash
 cd backend
 npm install
 ```
 
-Create a `.env` file in the backend directory:
-
-```env
-DATABASE_URL="file:./dev.db"
-JWT_SECRET="your_secret_key"
-PORT=3000
-```
-
-Initialize the database:
+Copier `backend/.env.example` vers `backend/.env`, puis initialiser la base et démarrer l'API :
 
 ```bash
 npx prisma migrate dev --name init
 npx prisma generate
-```
-
-Start the backend server:
-
-```bash
 node server.js
 ```
 
-Backend URL:
-
-```text
-http://localhost:3000
-```
-
-### Step 3 – Start the Frontend
-
-Open another terminal:
+Dans un second terminal, depuis la racine du projet :
 
 ```bash
 cd frontend
 npm install
+npx ng serve
 ```
 
-Start Angular:
+L'interface est disponible à `http://localhost:4200` et l'API à `http://localhost:3000/api`.
+Le proxy Angular redirige les requêtes `/api` vers le serveur en développement.
+Au premier démarrage, l'API peuple automatiquement une base vide avec les données de démonstration.
 
-```bash
-ng serve
-```
+Les mêmes opérations sont aussi disponibles depuis la racine avec `npm run setup`,
+`npm run db:migrate`, `npm run dev:backend` et `npm run dev:frontend`.
 
-Frontend URL:
+Commandes utiles :
+
+| Commande | Fonction |
+| --- | --- |
+| `npm run db:migrate` | Applique les migrations Prisma |
+| `npm run db:seed` | Réinitialise les données de démonstration |
+| `npm test` | Exécute les tests d'API sur une base SQLite de test |
+| `npm run build` | Compile l'application Angular |
+
+Comptes de démonstration :
+
+| Rôle | Adresse | Mot de passe |
+| --- | --- | --- |
+| Membre | `yasmine.trabelsi@supcom.tn` | `membre123` |
+| Administrateur | `youssef.ayari@supcom.tn` | `admin123` |
+
+## Structure
 
 ```text
-http://localhost:4200
+backend/
+  controllers/       Logique des activités, comptes, membres, admin et contact
+  lib/               Client Prisma et fonctions partagées
+  middlewares/       Authentification, rôles et validation
+  prisma/
+    migrations/      Historique des changements de schéma
+    schema.prisma    Modèle SQLite/Prisma
+    seed.js          Données de démonstration
+  routes/            Déclaration des endpoints REST
+  tests/             Tests d'intégration de l'API
+  server.js          Configuration et démarrage Express
+
+frontend/
+  src/
+    styles.css       Reset, thème et utilitaires à valeurs entre crochets
+    app/
+      core/          Services API/authentification, gardes et modèles
+      components/    Composants partagés, chacun avec son propre fichier CSS
+      pages/         Pages Angular, chacune avec son propre fichier CSS
+  angular.json       Configuration de compilation Angular
 ```
 
-## 7. Testing
+## Comment lire le code
 
-The application should be tested to verify:
+Une requête suit ce chemin : la page Angular appelle `core/api.service.ts`, puis
+une route Express appelle le middleware et le contrôleur concernés. Le contrôleur
+lit ou modifie les données avec Prisma.
 
-- Navigation between pages.
-- User registration and login.
-- Form validation.
-- Communication between Angular and the Express API.
-- Authentication and protected routes.
-- Responsive design on desktop, tablet, and mobile.
-- Compatibility with different browsers.
+- `backend/routes/` relie chaque URL à son contrôleur.
+- `backend/middlewares/` vérifie les droits et les données reçues.
+- `backend/controllers/` contient les actions de l'API.
+- `frontend/src/app/pages/` contient les écrans et leurs fonctionnalités.
+- `frontend/src/app/components/` contient les éléments réutilisés par plusieurs écrans.
+- `frontend/src/app/core/` contient les appels API, l'authentification et les types.
+- Le CSS d'un écran ou d'un composant se trouve à côté de ses fichiers.
+- Les classes utilitaires avec crochets restent dans `styles.css` pour éviter les problèmes d'encapsulation Angular.
 
-## 8. Project Objective
+## Fonctionnalités
 
-SC2 aims to provide a functional and accessible cybersecurity community platform while applying the main concepts of web development:
+- Pages publiques : accueil, activités et détails, calendrier, bureau, à propos et contact.
+- Recherche et filtres d'activités.
+- Connexion, demande d'adhésion, espaces membre et administrateur.
+- Réservations, liste d'attente et annulation avec promotion du prochain membre.
+- Gestion des adhésions et des cotisations.
+- Styles CSS classiques; Tailwind n'est pas utilisé.
 
-- Frontend development with Angular.
-- Backend development with Express.js.
-- REST API integration.
-- Database management.
-- User authentication.
-- Dynamic navigation and responsive design.
+## API
 
----
-
-**SC2 – Learn. Explore. Secure.**
-
+| Méthode | Route | Fonction |
+| --- | --- | --- |
+| GET | `/api/stats` | Chiffres clés |
+| GET | `/api/activities` | Liste filtrable des activités |
+| GET | `/api/activities/:slug` | Détail et réservation de l'utilisateur |
+| GET | `/api/board`, `/api/news` | Bureau et actualités |
+| POST | `/api/contact` | Envoyer un message |
+| POST | `/api/auth/login` | Connexion |
+| POST | `/api/auth/adhesion` | Demande d'adhésion |
+| GET | `/api/auth/me` | Session courante |
+| POST | `/api/activities/:slug/reservations` | Réserver (membre) |
+| DELETE | `/api/me/reservations/:id` | Annuler (membre) |
+| GET | `/api/me/dashboard` | Espace membre |
+| GET | `/api/admin/overview` | Tableau de bord admin |
+| PATCH | `/api/admin/adhesions/:id` | Valider/refuser une adhésion |
+| PATCH | `/api/admin/payments/:userId` | Modifier une cotisation |

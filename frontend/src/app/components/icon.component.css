@@ -1,0 +1,16 @@
+.ticket {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: 20px;
+  border-top-left-radius: 0.25rem;
+  border-bottom-left-radius: 0.25rem;
+  border-width: 1px;
+  border-color: var(--line);
+  background-color: var(--surface);
+  color: var(--ink);
+  --tw-shadow: var(--shadow);
+  --tw-shadow-colored: var(--shadow);
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}

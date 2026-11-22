@@ -1,0 +1,49 @@
+<footer class="mt-24 bg-night text-[#AFC0D6]">
+  <div class="wrap grid gap-10 py-14 md:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr_1.2fr]">
+    <div class="text-[#F5F7F2]">
+      <app-logo [onNight]="true" />
+      <p class="mt-4 max-w-[32ch] text-sm text-[#AFC0D6]">
+        La plateforme du club SC2 : activités, formations et vie associative au même endroit.
+      </p>
+    </div>
+
+    @for (column of columns; track column.title) {
+      <nav [attr.aria-label]="column.title">
+        <h2 class="font-sans text-sm font-semibold tracking-normal text-[#F5F7F2]">
+          {{ column.title }}
+        </h2>
+        <ul class="mt-3 grid gap-2 text-sm">
+          @for (link of column.links; track link.label) {
+            <li>
+              <a
+                [routerLink]="link.to"
+                [queryParams]="link.query"
+                class="hover:text-[#F5F7F2] hover:underline"
+                >{{ link.label }}</a
+              >
+            </li>
+          }
+        </ul>
+      </nav>
+    }
+
+    <div>
+      <h2 class="font-sans text-sm font-semibold tracking-normal text-[#F5F7F2]">Contact</h2>
+      <ul class="mt-3 grid gap-2 text-sm">
+        <li class="flex items-center gap-2">
+          <app-icon name="mail" [size]="16" /><a
+            [href]="'mailto:' + email"
+            class="hover:underline"
+            >{{ email }}</a
+          >
+        </li>
+        <li class="flex items-center gap-2">
+          <app-icon name="map-pin" [size]="16" />Local du club, SUP’COM
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-t border-white/10">
+    <p class="wrap py-5 text-[13px]">© 2026 Club SC2, SUP’COM. Projet Web, objectif 3.</p>
+  </div>
+</footer>

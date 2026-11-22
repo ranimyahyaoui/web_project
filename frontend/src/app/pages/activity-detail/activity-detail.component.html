@@ -1,0 +1,183 @@
+<!-- Bouton d'action unique de la page : son libellé dépend de la situation. -->
+<ng-template #reserveButton let-compact="compact">
+  @if (detail.data(); as activity) {
+    @if (closed()) {
+      <button type="button" class="btn" [class]="compact ? 'btn-sm' : 'btn-block'" disabled>
+        Inscriptions closes
+      </button>
+    } @else if (!auth.user()) {
+      <a
+        routerLink="/connexion"
+        [queryParams]="{ retour: returnUrl() }"
+        class="btn btn-primary"
+        [class]="compact ? 'btn-sm' : 'btn-block'"
+      >
+        <app-icon name="log-in" />{{ compact ? 'Se connecter' : 'Se connecter pour réserver' }}
+      </a>
+    } @else {
+      <button
+        type="button"
+        class="btn btn-primary"
+        [class]="compact ? 'btn-sm' : 'btn-block'"
+        (click)="reserve()"
+        [disabled]="busy()"
+      >
+        <app-icon name="ticket" />
+        @if (busy()) {
+          Réservation…
+        } @else if (activity.status === 'full') {
+          Rejoindre la liste d’attente
+        } @else {
+          {{ compact ? 'Réserver' : 'Réserver ma place' }}
+        }
+      </button>
+    }
+  }
+</ng-template>
+
+@if (detail.error(); as error) {
+  <div class="wrap">
+    <app-error-state [error]="error" [retryable]="error.status !== 404" (retry)="detail.load()" />
+    <p class="text-center">
+      <a routerLink="/activites" class="font-semibold text-green-ink hover:underline"
+        >Retour aux activités</a
+      >
+    </p>
+  </div>
+} @else if (detail.data(); as activity) {
+  <div class="wrap pb-24 pt-8 lg:pb-0">
+    <app-breadcrumb
+      [items]="[{ label: 'Activités', to: '/activites' }, { label: activity.title }]"
+    />
+
+    <div class="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
+      <article>
+        <div
+          class="grid h-44 place-items-center rounded-l text-white/90 md:h-64"
+          [class]="banner().className"
+          aria-hidden="true"
+        >
+          <app-icon [name]="banner().icon" [size]="48" />
+        </div>
+        <h1 class="mt-7 max-w-[20ch] text-[31px] font-extrabold md:text-[39px]">
+          {{ activity.title }}
+        </h1>
+        <div class="mt-4 flex flex-wrap gap-2">
+          <app-type-badge [type]="activity.type" />
+          <span class="badge b-neutral">{{ activity.pole }}</span>
+          <span class="badge b-neutral">{{ activity.level }}</span>
+          @if (activity.duration) {
+            <span class="badge b-neutral">{{ activity.duration }}</span>
+          }
+        </div>
+
+        <h2 class="mt-9 text-[25px] font-bold">À propos</h2>
+        <p class="mt-3 max-w-[68ch] text-muted">{{ activity.description }}</p>
+
+        <h2 class="mt-9 text-[25px] font-bold">Ce que vous saurez faire</h2>
+        <ul class="mt-4 grid gap-3 md:grid-cols-2">
+          @for (outcome of activity.outcomes; track outcome) {
+            <li
+              class="flex items-start gap-2.5 rounded-m border border-line bg-surface px-4 py-3 text-[15px]"
+            >
+              <app-icon name="circle-check" class="mt-0.5 text-green-ink" />{{ outcome }}
+            </li>
+          }
+        </ul>
+
+        @if (activity.sessions.length) {
+          <h2 class="mt-9 text-[25px] font-bold">Programme des séances</h2>
+          <ol class="mt-4 grid gap-2 md:grid-cols-2">
+            @for (date of activity.sessions; track date) {
+              <li
+                class="flex items-center gap-3 rounded-m border border-line bg-surface px-4 py-2.5 text-[15px]"
+              >
+                <span class="badge b-formation">S{{ $index + 1 }}</span>
+                {{ shortDate(date) }}, {{ activity.startTime }}
+              </li>
+            }
+          </ol>
+        }
+      </article>
+
+      <!-- Carte de réservation : fixée à droite pendant le défilement sur ordinateur. -->
+      <aside class="ticket lg:sticky lg:top-[100px]" aria-label="Réservation">
+        <div class="px-6 pb-5 pt-6">
+          <h2 class="text-[21px] font-bold">
+            {{ activity.myRegistration ? 'Votre réservation' : 'Réserver une place' }}
+          </h2>
+          <dl class="mt-4 grid gap-3.5">
+            @for (fact of facts(); track fact.term) {
+              <div class="flex gap-3">
+                <app-icon [name]="fact.icon" class="mt-0.5 text-green-ink" />
+                <div>
+                  <dt class="text-xs text-faint">{{ fact.term }}</dt>
+                  <dd class="text-[15px] font-medium">{{ fact.value }}</dd>
+                </div>
+              </div>
+            }
+          </dl>
+        </div>
+        <div class="ticket-perf" aria-hidden="true"></div>
+        <div class="px-6 pb-6 pt-5">
+          <p class="mb-4 flex items-baseline justify-between text-sm text-muted">
+            <span>
+              <strong class="font-display text-xl font-bold text-ink">{{
+                activity.remaining
+              }}</strong>
+              {{ activity.remaining > 1 ? 'places restantes' : 'place restante' }}
+            </span>
+            <span>sur {{ activity.capacity }}</span>
+          </p>
+          <app-seat-map
+            [activityId]="activity.id"
+            [taken]="activity.taken"
+            [capacity]="activity.capacity"
+            [mine]="activity.myRegistration?.status === 'CONFIRMED'"
+          />
+
+          <div class="mt-5">
+            @if (activity.myRegistration; as mine) {
+              <div class="rounded-m bg-green-tint p-4" role="status">
+                <app-reservation-badge [status]="mine.status" />
+                <p class="mt-3 text-xs text-muted">Code à présenter à l’entrée</p>
+                <p class="font-display text-2xl font-bold tracking-wide">{{ mine.code }}</p>
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm mt-4"
+                  (click)="cancel(mine.id)"
+                  [disabled]="busy()"
+                >
+                  Annuler ma réservation
+                </button>
+              </div>
+            } @else {
+              <ng-container *ngTemplateOutlet="reserveButton; context: { compact: false }" />
+              <p class="mt-3 flex items-start gap-2 text-[13px] text-muted">
+                <app-icon name="circle-check" [size]="16" class="mt-0.5 text-green-ink" />
+                Réservé aux membres. Votre code de réservation s’affiche ici dès la confirmation.
+              </p>
+            }
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Sur téléphone, la réservation devient une barre fixe en bas de l'écran. -->
+    @if (!activity.myRegistration) {
+      <div
+        class="fixed inset-x-0 bottom-0 z-10 flex items-center justify-between gap-3 border-t border-line bg-surface px-5 py-3 lg:hidden"
+      >
+        <p class="text-sm">
+          <span class="block text-xs text-muted"
+            >{{ shortDate(activity.date) }}, {{ activity.startTime }}</span
+          >
+          <strong>{{ plural(activity.remaining, 'place restante', 'places restantes') }}</strong>
+        </p>
+        <ng-container *ngTemplateOutlet="reserveButton; context: { compact: true }" />
+      </div>
+    }
+  </div>
+} @else {
+  <app-loading label="Chargement de l’activité…" />
+}

@@ -1,0 +1,92 @@
+.pointer-events-none {
+  pointer-events: none;
+}
+.pointer-events-auto {
+  pointer-events: auto;
+}
+.fixed {
+  position: fixed;
+}
+.inset-x-0 {
+  left: 0;
+  right: 0;
+}
+.bottom-20 {
+  bottom: 5rem;
+}
+.z-50 {
+  z-index: 50;
+}
+.mt-0\.5 {
+  margin-top: 0.125rem;
+}
+.flex {
+  display: flex;
+}
+.w-full {
+  width: 100%;
+}
+.max-w-md {
+  max-width: 28rem;
+}
+.flex-1 {
+  flex: 1 1 0%;
+}
+.flex-col {
+  flex-direction: column;
+}
+.items-start {
+  align-items: flex-start;
+}
+.items-center {
+  align-items: center;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-3 {
+  gap: 0.75rem;
+}
+.rounded {
+  border-radius: 0.25rem;
+}
+.rounded-m {
+  border-radius: 12px;
+}
+.bg-night {
+  background-color: var(--night);
+}
+.p-0\.5 {
+  padding: 0.125rem;
+}
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.py-3 {
+  padding-top: 0.75rem;
+  padding-bottom: 0.75rem;
+}
+.text-green {
+  color: var(--green);
+}
+.opacity-70 {
+  opacity: 0.7;
+}
+.shadow-card,
+.shadow-lift {
+  box-shadow:
+    var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+.shadow-lift {
+  --tw-shadow: var(--shadow-lg);
+  --tw-shadow-colored: var(--shadow-lg);
+}
+.hover\:opacity-100:hover {
+  opacity: 1;
+}
+@media (min-width: 641px) {
+  .md\:bottom-6 {
+    bottom: 1.5rem;
+  }
+}

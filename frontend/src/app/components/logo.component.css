@@ -1,0 +1,37 @@
+.flex {
+  display: flex;
+}
+.flex-none {
+  flex: none;
+}
+.items-center {
+  align-items: center;
+}
+.gap-2 {
+  gap: 0.5rem;
+}
+.gap-2\.5 {
+  gap: 0.625rem;
+}
+.font-display {
+  font-family:
+    Bricolage Grotesque Variable,
+    Onest Variable,
+    system-ui,
+    sans-serif;
+}
+.font-extrabold {
+  font-weight: 800;
+}
+.font-medium {
+  font-weight: 500;
+}
+.tracking-tight {
+  letter-spacing: -0.025em;
+}
+.text-green {
+  color: var(--green);
+}
+.text-green-ink {
+  color: var(--green-ink);
+}

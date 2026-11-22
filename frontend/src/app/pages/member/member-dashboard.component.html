@@ -1,0 +1,132 @@
+<app-shell [links]="links" roleLabel="Membre">
+  @if (dashboard.error(); as error) {
+    <app-error-state [error]="error" (retry)="dashboard.load()" />
+  } @else if (dashboard.data(); as data) {
+    <div class="mx-auto grid max-w-[1100px] grid-cols-1 gap-8">
+      <header id="tableau" class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 class="text-[31px] font-extrabold md:text-[39px]">
+            Bonjour {{ data.user.firstName }}
+          </h1>
+          <p class="mt-1 text-muted">{{ today }}. {{ nextSentence() }}</p>
+        </div>
+        <a routerLink="/activites" class="btn btn-primary"
+          ><app-icon name="plus" />Réserver une activité</a
+        >
+      </header>
+
+      <div class="grid grid-cols-1 gap-6 lg:grid-cols-[360px_minmax(0,1fr)]">
+        <section
+          id="adhesion"
+          aria-label="Carte de membre"
+          class="flex flex-col justify-between gap-8 rounded-l bg-night p-6 text-[#F5F7F2]"
+        >
+          <div class="flex items-center justify-between gap-3">
+            <span class="flex items-center gap-2 font-display text-lg font-extrabold"
+              ><app-logo [onNight]="true" [size]="30" [wordmark]="false" />SC2</span
+            >
+            @if (data.payment; as payment) {
+              <app-payment-badge [status]="payment.status" prefix="Cotisation : " />
+            }
+          </div>
+          <div>
+            <p class="text-xs text-[#AFC0D6]">Carte de membre {{ data.payment?.academicYear }}</p>
+            <p class="mt-1 font-display text-2xl font-bold">
+              {{ data.user.firstName }} {{ data.user.lastName }}
+            </p>
+          </div>
+          <dl class="flex justify-between gap-4 text-sm">
+            <div>
+              <dt class="text-xs text-[#AFC0D6]">N° de membre</dt>
+              <dd class="font-display font-bold tracking-wide">{{ data.user.memberNumber }}</dd>
+            </div>
+            <div class="text-right">
+              <dt class="text-xs text-[#AFC0D6]">Pôles</dt>
+              <dd class="font-semibold">{{ data.user.poles || 'À choisir' }}</dd>
+            </div>
+          </dl>
+        </section>
+
+        @if (next(); as next) {
+          <section class="ticket" aria-label="Prochaine réservation">
+            <div class="flex-1 p-6">
+              <div class="flex flex-wrap items-center justify-between gap-2">
+                <app-type-badge [type]="next.activity.type" />
+                <app-reservation-badge [status]="next.status" />
+              </div>
+              <h2 class="mt-4 text-2xl font-bold">
+                <a [routerLink]="['/activites', next.activity.slug]" class="hover:underline">{{
+                  next.activity.title
+                }}</a>
+              </h2>
+              <ul class="mt-4 grid gap-2 text-[15px] text-muted md:grid-cols-2">
+                <li class="flex items-center gap-2">
+                  <app-icon name="calendar" [size]="16" class="text-faint" />{{
+                    longDate(next.activity.date)
+                  }}
+                </li>
+                <li class="flex items-center gap-2">
+                  <app-icon name="clock" [size]="16" class="text-faint" />{{
+                    next.activity.startTime
+                  }}
+                  – {{ next.activity.endTime }}
+                </li>
+                <li class="flex items-center gap-2">
+                  <app-icon name="map-pin" [size]="16" class="text-faint" />{{
+                    next.activity.location
+                  }}
+                </li>
+              </ul>
+            </div>
+            <div class="ticket-perf" aria-hidden="true"></div>
+            <div class="p-6">
+              <p class="text-xs text-muted">Code à présenter à l’entrée</p>
+              <p class="font-display text-xl font-bold tracking-wide">{{ next.code }}</p>
+            </div>
+          </section>
+        } @else {
+          <app-empty title="Pas encore de réservation"
+            >Parcourez le programme et réservez votre première place.</app-empty
+          >
+        }
+      </div>
+
+      <section id="reservations" class="card p-6">
+        <h2 class="text-2xl font-bold">Mes réservations</h2>
+        <ul class="mt-4 divide-y divide-line">
+          @for (reservation of upcoming(); track reservation.id) {
+            <li class="flex flex-wrap items-center justify-between gap-3 py-4">
+              <div class="min-w-0">
+                <a
+                  [routerLink]="['/activites', reservation.activity.slug]"
+                  class="font-semibold hover:underline"
+                  >{{ reservation.activity.title }}</a
+                >
+                <p class="mt-0.5 text-sm text-muted">
+                  {{ shortDate(reservation.activity.date) }}, {{ reservation.activity.startTime }} ·
+                  {{ reservation.activity.location }} · code {{ reservation.code }}
+                </p>
+              </div>
+              <div class="flex items-center gap-2">
+                <app-reservation-badge [status]="reservation.status" />
+                <button
+                  type="button"
+                  class="btn btn-danger btn-sm"
+                  (click)="cancel(reservation)"
+                  [disabled]="busyId() === reservation.id"
+                  [attr.aria-label]="'Annuler la réservation : ' + reservation.activity.title"
+                >
+                  Annuler
+                </button>
+              </div>
+            </li>
+          } @empty {
+            <li class="py-3 text-muted">Vous n’avez aucune réservation à venir.</li>
+          }
+        </ul>
+      </section>
+    </div>
+  } @else {
+    <app-loading label="Chargement de votre espace…" />
+  }
+</app-shell>

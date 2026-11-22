@@ -1,0 +1,100 @@
+<header
+  class="sticky top-0 z-20 border-b border-line backdrop-blur"
+  style="background-color: color-mix(in srgb, var(--paper) 88%, transparent)"
+>
+  <div class="wrap flex h-[68px] items-center gap-3 lg:h-[76px] lg:gap-5">
+    <a routerLink="/" aria-label="SC2 Connect, accueil"><app-logo /></a>
+
+    <nav aria-label="Menu principal" class="hidden gap-0.5 lg:flex">
+      @for (link of links; track link.to) {
+        <a
+          [routerLink]="link.to"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: link.exact }"
+          ariaCurrentWhenActive="page"
+          class="nav-link"
+          >{{ link.label }}</a
+        >
+      }
+    </nav>
+
+    <app-search-box class="ml-auto hidden w-full max-w-[280px] lg:block" />
+
+    <div class="ml-auto flex items-center gap-2 lg:ml-0 lg:gap-2.5">
+      @if (auth.user(); as user) {
+        <a [routerLink]="space()" class="btn btn-ghost btn-sm lg:h-11">
+          <span
+            class="grid h-6 w-6 place-items-center rounded-full bg-night text-[11px] font-bold text-[#F5F7F2]"
+            aria-hidden="true"
+            >{{ userInitials() }}</span
+          >
+          Mon espace
+        </a>
+        <button
+          type="button"
+          (click)="auth.logout()"
+          class="btn btn-ghost btn-sm hidden lg:inline-flex lg:h-11"
+          aria-label="Se déconnecter"
+        >
+          <app-icon name="log-out" />
+        </button>
+      } @else {
+        <a routerLink="/connexion" class="btn btn-ghost hidden lg:inline-flex"
+          ><app-icon name="log-in" />Se connecter</a
+        >
+        <a
+          routerLink="/connexion"
+          [queryParams]="{ onglet: 'adhesion' }"
+          class="btn btn-primary btn-sm px-3 lg:h-11 lg:px-[18px]"
+          >Rejoindre le club</a
+        >
+      }
+      <button
+        type="button"
+        class="grid h-[42px] w-[42px] place-items-center rounded-m border border-line bg-surface lg:hidden"
+        [attr.aria-expanded]="open()"
+        aria-controls="menu-mobile"
+        [attr.aria-label]="open() ? 'Fermer le menu' : 'Ouvrir le menu'"
+        (click)="open.set(!open())"
+      >
+        <app-icon [name]="open() ? 'x' : 'menu'" [size]="20" />
+      </button>
+    </div>
+  </div>
+
+  @if (open()) {
+    <div id="menu-mobile" class="border-t border-line bg-paper lg:hidden">
+      <div class="wrap flex flex-col gap-1 py-4">
+        <app-search-box class="mb-2" (searched)="open.set(false)" />
+        <nav aria-label="Menu principal" class="flex flex-col gap-1">
+          @for (link of links; track link.to) {
+            <a
+              [routerLink]="link.to"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: link.exact }"
+              ariaCurrentWhenActive="page"
+              class="nav-link h-11"
+              >{{ link.label }}</a
+            >
+          }
+        </nav>
+        <div class="mt-3 border-t border-line pt-3">
+          @if (auth.user()) {
+            <div class="flex gap-2">
+              <a [routerLink]="space()" class="btn btn-dark flex-1"
+                ><app-icon name="layout-dashboard" />Mon espace</a
+              >
+              <button type="button" (click)="auth.logout()" class="btn btn-ghost">
+                <app-icon name="log-out" />Se déconnecter
+              </button>
+            </div>
+          } @else {
+            <a routerLink="/connexion" class="btn btn-ghost btn-block"
+              ><app-icon name="log-in" />Se connecter</a
+            >
+          }
+        </div>
+      </div>
+    </div>
+  }
+</header>

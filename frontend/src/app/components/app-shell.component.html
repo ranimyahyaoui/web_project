@@ -1,0 +1,45 @@
+<div class="min-h-screen lg:grid lg:grid-cols-[250px_minmax(0,1fr)]">
+  <aside class="bg-night text-[#AFC0D6] lg:sticky lg:top-0 lg:flex lg:h-screen lg:flex-col">
+    <div class="flex items-center justify-between gap-3 px-5 py-4 text-[#F5F7F2] lg:py-6">
+      <a routerLink="/" aria-label="SC2 Connect, retour au site"
+        ><app-logo [onNight]="true" [size]="34"
+      /></a>
+      <button type="button" (click)="signOut()" class="btn btn-onnight btn-sm lg:hidden">
+        <app-icon name="log-out" />Quitter
+      </button>
+    </div>
+
+    <nav
+      aria-label="Sections de l’espace"
+      class="flex gap-1 overflow-x-auto px-3 pb-3 lg:flex-1 lg:flex-col lg:overflow-visible"
+    >
+      @for (link of links(); track link.fragment) {
+        <a [routerLink]="[]" [fragment]="link.fragment" class="side-link">
+          <app-icon [name]="link.icon" />{{ link.label }}
+        </a>
+      }
+    </nav>
+
+    <div class="hidden border-t border-white/10 p-3 lg:block">
+      <a routerLink="/" class="side-link"><app-icon name="arrow-left" />Retour au site</a>
+      <button type="button" (click)="signOut()" class="side-link w-full">
+        <app-icon name="log-out" />Se déconnecter
+      </button>
+    </div>
+  </aside>
+
+  <div class="min-w-0">
+    <header class="flex items-center justify-end gap-3 border-b border-line px-5 py-3 md:px-8">
+      <span class="badge b-neutral">{{ roleLabel() }}</span>
+      @if (user(); as user) {
+        <span
+          class="grid h-9 w-9 place-items-center rounded-full bg-night text-[13px] font-bold text-[#F5F7F2]"
+          aria-hidden="true"
+          >{{ userInitials() }}</span
+        >
+        <span class="text-sm font-semibold">{{ user.firstName }} {{ user.lastName }}</span>
+      }
+    </header>
+    <main class="px-5 py-8 md:px-8"><ng-content /></main>
+  </div>
+</div>

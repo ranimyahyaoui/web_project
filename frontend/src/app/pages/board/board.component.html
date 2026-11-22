@@ -1,0 +1,43 @@
+<div class="wrap pt-8">
+  <app-breadcrumb [items]="[{ label: 'Bureau' }]" />
+  <h1 class="text-[39px] font-extrabold md:text-[49px]">Le bureau 2026-2027</h1>
+  <p class="mt-3 max-w-[62ch] text-muted">
+    Les huit étudiants qui organisent la vie du club. Une question sur une activité ou votre
+    adhésion ? Écrivez directement à la bonne personne.
+  </p>
+
+  @if (board.loading()) {
+    <app-loading label="Chargement du bureau…" />
+  } @else if (board.error(); as error) {
+    <app-error-state [error]="error" (retry)="board.load()" />
+  } @else {
+    <ul class="mt-8 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+      @for (member of board.data(); track member.id) {
+        <li class="card flex flex-col overflow-hidden p-2.5">
+          <!-- Visuel provisoire : les photos réelles remplaceront les initiales. -->
+          <div
+            class="flex h-36 items-end rounded-[14px] p-4"
+            [class]="gradients[$index % gradients.length]"
+            aria-hidden="true"
+          >
+            <span class="font-display text-3xl font-extrabold text-white">{{
+              initialsOf(member.name)
+            }}</span>
+          </div>
+          <div class="flex flex-1 flex-col p-3">
+            <h2 class="text-xl font-bold">{{ member.name }}</h2>
+            <p class="mt-0.5 text-sm font-semibold text-green-ink">{{ member.position }}</p>
+            <p class="mt-2 flex-1 text-[15px] text-muted">{{ member.description }}</p>
+            <a
+              [href]="'mailto:' + member.email"
+              class="btn btn-ghost btn-sm mt-4 self-start"
+              [attr.aria-label]="'Écrire à ' + member.name"
+            >
+              <app-icon name="mail" />Écrire
+            </a>
+          </div>
+        </li>
+      }
+    </ul>
+  }
+</div>

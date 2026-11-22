@@ -1,0 +1,237 @@
+<div class="min-h-screen lg:grid lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.2fr)]">
+  <aside
+    class="relative hidden flex-col justify-between overflow-hidden bg-hero p-10 text-hero-ink lg:flex"
+  >
+    <a routerLink="/" aria-label="SC2 Connect, accueil"><app-logo [onNight]="true" /></a>
+    <div>
+      <h2 class="max-w-[12ch] text-[39px] font-extrabold leading-[1.05]">
+        Votre espace membre vous attend.
+      </h2>
+      <ul class="mt-7 grid gap-3 text-[15px] text-hero-muted">
+        @for (benefit of benefits; track benefit.text) {
+          <li class="flex items-center gap-3">
+            <app-icon [name]="benefit.icon" class="text-green" />{{ benefit.text }}
+          </li>
+        }
+      </ul>
+    </div>
+  </aside>
+
+  <main class="flex min-h-screen flex-col px-5 py-8 md:px-10">
+    <a routerLink="/" class="mb-8 self-start lg:hidden" aria-label="SC2 Connect, accueil"
+      ><app-logo
+    /></a>
+    <div class="m-auto w-full max-w-[520px]">
+      <div
+        role="tablist"
+        aria-label="Connexion ou adhésion"
+        class="mb-8 grid grid-cols-2 gap-1 rounded-m bg-surface-2 p-1"
+      >
+        @for (item of tabs; track item.name) {
+          <button
+            type="button"
+            role="tab"
+            [attr.aria-selected]="tab() === item.name"
+            (click)="selectTab(item.name)"
+            class="h-10 rounded-[9px] text-sm font-semibold"
+            [class]="
+              tab() === item.name ? 'bg-surface text-ink shadow-card' : 'text-muted hover:text-ink'
+            "
+          >
+            {{ item.label }}
+          </button>
+        }
+      </div>
+
+      <div role="tabpanel">
+        @if (tab() === 'connexion') {
+          <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate class="grid gap-5">
+            <div>
+              <h1 class="text-[31px] font-extrabold">Bon retour parmi nous</h1>
+              <p class="mt-2 text-muted">Connectez-vous avec votre adresse e-mail universitaire.</p>
+            </div>
+            @if (loginFailure()) {
+              <p
+                role="alert"
+                class="rounded-m bg-red-tint px-4 py-3 text-[15px] font-medium text-red"
+              >
+                {{ loginFailure() }}
+              </p>
+            }
+            <div>
+              <label for="login-email" class="field-label">Adresse e-mail</label>
+              <input
+                id="login-email"
+                type="email"
+                class="field-input"
+                formControlName="email"
+                autocomplete="username"
+                placeholder="prenom.nom@supcom.tn"
+                [attr.aria-invalid]="loginErrors.of('email') ? 'true' : null"
+                aria-describedby="login-email-error"
+              />
+              <app-field-error id="login-email-error" [message]="loginErrors.of('email')" />
+            </div>
+            <div>
+              <label for="login-password" class="field-label">Mot de passe</label>
+              <input
+                id="login-password"
+                type="password"
+                class="field-input"
+                formControlName="password"
+                autocomplete="current-password"
+                [attr.aria-invalid]="loginErrors.of('password') ? 'true' : null"
+                aria-describedby="login-password-error"
+              />
+              <app-field-error id="login-password-error" [message]="loginErrors.of('password')" />
+            </div>
+            <button type="submit" class="btn btn-primary btn-block" [disabled]="loggingIn()">
+              <app-icon name="log-in" />{{ loggingIn() ? 'Connexion…' : 'Se connecter' }}
+            </button>
+            <p class="text-center text-sm text-muted">
+              Un compte administrateur est attribué par le bureau.
+            </p>
+          </form>
+        } @else if (sent()) {
+          <div role="status" class="rounded-l bg-green-tint p-7 text-center">
+            <app-icon name="circle-check" [size]="36" class="text-green-ink" />
+            <h1 class="mt-3 text-[25px] font-bold">Demande envoyée</h1>
+            <p class="mt-2 text-muted">
+              Le bureau la valide sous 48 heures. Vous pourrez alors vous connecter avec l’adresse
+              et le mot de passe que vous venez de choisir.
+            </p>
+            <a routerLink="/activites" class="btn btn-dark mt-5">Voir les activités en attendant</a>
+          </div>
+        } @else {
+          <form
+            [formGroup]="adhesionForm"
+            (ngSubmit)="requestAdhesion()"
+            novalidate
+            class="grid gap-5 md:grid-cols-2"
+          >
+            <div class="md:col-span-2">
+              <h1 class="text-[31px] font-extrabold">Rejoindre le club</h1>
+              <p class="mt-2 text-muted">
+                Ouvert à tous les étudiants de l’école. Le bureau répond sous 48 heures.
+              </p>
+            </div>
+            <div>
+              <label for="adh-first" class="field-label">Prénom</label>
+              <input
+                id="adh-first"
+                class="field-input"
+                formControlName="firstName"
+                autocomplete="given-name"
+                [attr.aria-invalid]="adhesionErrors.of('firstName') ? 'true' : null"
+                aria-describedby="adh-first-error"
+              />
+              <app-field-error id="adh-first-error" [message]="adhesionErrors.of('firstName')" />
+            </div>
+            <div>
+              <label for="adh-last" class="field-label">Nom</label>
+              <input
+                id="adh-last"
+                class="field-input"
+                formControlName="lastName"
+                autocomplete="family-name"
+                [attr.aria-invalid]="adhesionErrors.of('lastName') ? 'true' : null"
+                aria-describedby="adh-last-error"
+              />
+              <app-field-error id="adh-last-error" [message]="adhesionErrors.of('lastName')" />
+            </div>
+            <div class="md:col-span-2">
+              <label for="adh-email" class="field-label">Adresse e-mail universitaire</label>
+              <input
+                id="adh-email"
+                type="email"
+                class="field-input"
+                formControlName="email"
+                autocomplete="email"
+                placeholder="prenom.nom@supcom.tn"
+                [attr.aria-invalid]="adhesionErrors.of('email') ? 'true' : null"
+                aria-describedby="adh-email-error"
+              />
+              <app-field-error id="adh-email-error" [message]="adhesionErrors.of('email')" />
+            </div>
+            <div>
+              <label for="adh-password" class="field-label">Mot de passe</label>
+              <input
+                id="adh-password"
+                type="password"
+                class="field-input"
+                formControlName="password"
+                autocomplete="new-password"
+                [attr.aria-invalid]="adhesionErrors.of('password') ? 'true' : null"
+                aria-describedby="adh-password-hint adh-password-error"
+              />
+              @if (!adhesionErrors.of('password')) {
+                <p id="adh-password-hint" class="mt-1.5 text-sm text-muted">
+                  8 caractères au moins.
+                </p>
+              }
+              <app-field-error id="adh-password-error" [message]="adhesionErrors.of('password')" />
+            </div>
+            <div>
+              <label for="adh-level" class="field-label">Niveau et filière</label>
+              <select
+                id="adh-level"
+                class="field-input"
+                formControlName="level"
+                [attr.aria-invalid]="adhesionErrors.of('level') ? 'true' : null"
+                aria-describedby="adh-level-error"
+              >
+                <option value="">Choisir…</option>
+                @for (level of levels; track level) {
+                  <option [value]="level">{{ level }}</option>
+                }
+              </select>
+              <app-field-error id="adh-level-error" [message]="adhesionErrors.of('level')" />
+            </div>
+
+            <fieldset class="md:col-span-2" aria-describedby="adh-poles-error">
+              <legend class="field-label">Pôles qui vous intéressent</legend>
+              <div class="flex flex-wrap gap-2">
+                @for (pole of poles; track pole) {
+                  <button
+                    type="button"
+                    class="chip"
+                    [attr.aria-pressed]="hasPole(pole)"
+                    (click)="togglePole(pole)"
+                  >
+                    {{ pole }}
+                  </button>
+                }
+              </div>
+              <app-field-error id="adh-poles-error" [message]="adhesionErrors.of('poles')" />
+            </fieldset>
+
+            <div class="md:col-span-2">
+              <label for="adh-motivation" class="field-label">Motivation (facultatif)</label>
+              <textarea
+                id="adh-motivation"
+                rows="3"
+                class="field-input"
+                formControlName="motivation"
+                [attr.aria-invalid]="adhesionErrors.of('motivation') ? 'true' : null"
+                aria-describedby="adh-motivation-error"
+              ></textarea>
+              <app-field-error
+                id="adh-motivation-error"
+                [message]="adhesionErrors.of('motivation')"
+              />
+            </div>
+            <div class="md:col-span-2">
+              <button type="submit" class="btn btn-primary btn-block" [disabled]="sending()">
+                <app-icon name="user-plus" />{{ sending() ? 'Envoi…' : 'Envoyer ma demande' }}
+              </button>
+            </div>
+          </form>
+        }
+      </div>
+
+      <p class="mt-8 text-center text-sm text-muted">
+        <a routerLink="/" class="font-semibold text-green-ink hover:underline">Retour au site</a>
+      </p>
+    </div>
+  </main>
+</div>
