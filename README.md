@@ -119,3 +119,4 @@ lit ou modifie les données avec Prisma.
 | GET | `/api/admin/overview` | Tableau de bord admin |
 | PATCH | `/api/admin/adhesions/:id` | Valider/refuser une adhésion |
 | PATCH | `/api/admin/payments/:userId` | Modifier une cotisation |
+"# web_project1" 
